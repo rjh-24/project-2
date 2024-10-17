@@ -47,8 +47,8 @@ body {
   background-color: #ffffff;
   border: 2px solid #ccc;
   border-radius: 4px;
-  width: 100%;
-  height: 100%;
+  width: 10%;
+  height: 10%;
   aspect-ratio: 1;
   display: flex;
   justify-content: center;
@@ -66,4 +66,18 @@ body {
 
 .misplaced-letter {
   background-color: gold;
+}
+
+@media screen and (max-width: 1200px) {
+  .box {
+    width: 80%;
+    height: 80%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .box {
+    width: 100%;
+    height: 100%;
+  }
 }
