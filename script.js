@@ -1,5 +1,12 @@
 let currentAttempt = 0;
-let correctAnswer = "boats";
+let correctAnswer = "gulag";
+const correctAnswerLetterFrequency = {};
+
+correctAnswer.split("").forEach((letter) => {
+  correctAnswerLetterFrequency[letter]
+    ? correctAnswerLetterFrequency[letter]++
+    : (correctAnswerLetterFrequency[letter] = 1);
+});
 
 const rotateArrowVisibility = () => {
   if (currentAttempt > 6) return;
@@ -24,22 +31,31 @@ btn.addEventListener("click", () => {
   currentAttempt++;
   rotateArrowVisibility();
 
+  let frequencyCopy = { ...correctAnswerLetterFrequency };
+
   const boxes = document.getElementById(`row-${currentAttempt}`).children;
 
   userGuessText.split("").map((letter, index) => {
     boxes[index + 1].innerHTML = letter.toUpperCase();
 
-    mappedAnswerLetter = correctAnswer[index];
-    mappedGuessLetter = userGuessText[index];
-    console.log("mappedCurrentUserLetter: ", userGuessText[index]);
+    mappedAnswerLetter = correctAnswer[index].toLowerCase();
+    mappedGuessLetter = userGuessText[index].toLowerCase();
 
-    if (mappedAnswerLetter === mappedGuessLetter) {
+    if (
+      mappedAnswerLetter === mappedGuessLetter &&
+      frequencyCopy[mappedGuessLetter] > 0
+    ) {
       boxes[index + 1].classList.add("correct-letter");
+      frequencyCopy[mappedGuessLetter]--;
       return;
     }
 
-    if (correctAnswer.includes(mappedGuessLetter)) {
+    if (
+      correctAnswer.includes(mappedGuessLetter) &&
+      frequencyCopy[mappedGuessLetter] > 0
+    ) {
       boxes[index + 1].classList.add("misplaced-letter");
+      frequencyCopy[mappedGuessLetter]--;
       return;
     }
 
