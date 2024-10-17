@@ -18,12 +18,20 @@
   </head>
   <body>
     <h1>Welcome to Wordle!</h1>
-    <button
-      style="margin-bottom: 10px"
-      id="btn"
-    >
-      Testing
-    </button>
+    <div class="guess-container">
+      <p>What is your guess?</p>
+      <div class="response-container">
+        <input
+          type="text"
+          id="user-guess"
+          name="user-guess"
+          minlength="5"
+          maxlength="5"
+          placeholder="Type guess here"
+        />
+        <button id="guess-check-btn">Check</button>
+      </div>
+    </div>
     <div class="grid">
       <div
         class="row"

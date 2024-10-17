@@ -7,6 +7,18 @@ body {
   background-color: #f0f0f0;
 }
 
+.guess-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.response-container > * {
+  line-height: 1.5;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
 .grid {
   display: flex;
   flex-direction: column;
@@ -43,4 +55,16 @@ body {
   justify-content: center;
   align-items: center;
   margin: 0 5px;
+}
+
+.correct-letter {
+  background-color: green;
+}
+
+.absent-letter {
+  background-color: gray;
+}
+
+.misplaced-letter {
+  background-color: gold;
 }
