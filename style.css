@@ -12,7 +12,8 @@ body {
   align-items: center;
 }
 
-.response-container > * {
+.response-container > *,
+#restart-game-btn {
   line-height: 1.5;
   padding: 10px;
   margin-bottom: 10px;

@@ -20,7 +20,10 @@
     <h1>Welcome to Wordle!</h1>
     <div class="guess-container">
       <p>What is your guess?</p>
-      <div class="response-container">
+      <div
+        class="response-container"
+        id="response-container"
+      >
         <input
           type="text"
           id="user-guess"
@@ -31,6 +34,12 @@
         />
         <button id="guess-check-btn">Check</button>
       </div>
+      <button
+        id="restart-game-btn"
+        style="display: none"
+      >
+        Restart Game
+      </button>
     </div>
     <div class="grid">
       <div
