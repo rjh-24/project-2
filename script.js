@@ -41,26 +41,30 @@ const wordBank = [
 ];
 
 let currentAttempt = 0;
-let correctAnswer;
-const correctAnswerLetterFrequency = {};
+let currentAnswer;
+const currentAnswerLetterFrequency = {};
 
 const getFrequency = (word) => {
-  word.split("").forEach((letter) => {
-    correctAnswerLetterFrequency[letter.toLowerCase()]
-      ? correctAnswerLetterFrequency[letter.toLowerCase()]++
-      : (correctAnswerLetterFrequency[letter.toLowerCase()] = 1);
-  });
+  word
+    .toLowerCase()
+    .split("")
+    .forEach((letter) => {
+      currentAnswerLetterFrequency[letter]
+        ? currentAnswerLetterFrequency[letter]++
+        : (currentAnswerLetterFrequency[letter] = 1);
+    });
 };
 
 const useWordBank = () => {
   const randomIdx = Math.floor(Math.random() * 35);
-  correctAnswer = wordBank[randomIdx];
-  getFrequency(correctAnswer);
+  currentAnswer = wordBank[randomIdx];
+  getFrequency(currentAnswer);
 };
 
 const getCurrentWord = (fetchWord = false) => {
   if (!fetchWord) {
     useWordBank();
+    console.log("The answer for the current game is: ", currentAnswer);
     return;
   }
 
@@ -69,7 +73,7 @@ const getCurrentWord = (fetchWord = false) => {
   const options = {
     method: "GET",
     headers: {
-      "x-rapidapi-key": "5c547f3788msh007f4139bb62e23p1dce91jsnd655fb0d4e13",
+      "x-rapidapi-key": "",
       "x-rapidapi-host": "wordle-api3.p.rapidapi.com",
     },
   };
@@ -77,12 +81,14 @@ const getCurrentWord = (fetchWord = false) => {
   fetch(url, options)
     .then((res) => res.json())
     .then((data) => {
-      correctAnswer = data.word;
-      getFrequency(correctAnswer);
+      currentAnswer = data.word.charAt(0).toUpperCase() + data.word.slice(1);
+      getFrequency(currentAnswer);
+      console.log("The answer for the current game is: ", currentAnswer);
     })
     .catch((error) => {
       console.log("error: ", error);
       useWordBank();
+      console.log("The answer for the current game is: ", currentAnswer);
     });
 };
 
@@ -103,27 +109,25 @@ const finishGame = (correctGuess = false) => {
     ? `Congratulations! You took a total of ${currentAttempt} ${
         currentAttempt === 1 ? `guess` : `guesses`
       } to get the correct answer!`
-    : `Nice try! The answer was ${correctAnswer}.`;
+    : `Nice try! The answer was ${currentAnswer}.`;
 
   window.alert(displayMessage);
 };
 
 guessCheckBtn.addEventListener("click", () => {
   const userGuessInput = document.getElementById("user-guess");
+  let frequencyCopy = { ...currentAnswerLetterFrequency };
   userGuessText = userGuessInput.value;
 
   currentAttempt++;
-
   rotateArrowVisibility();
-
-  let frequencyCopy = { ...correctAnswerLetterFrequency };
 
   const boxes = document.getElementById(`row-${currentAttempt}`).children;
 
   userGuessText.split("").forEach((letter, index) => {
     boxes[index + 1].innerHTML = letter.toUpperCase();
 
-    mappedAnswerLetter = correctAnswer[index].toLowerCase();
+    mappedAnswerLetter = currentAnswer[index].toLowerCase();
     mappedGuessLetter = userGuessText[index].toLowerCase();
 
     if (
@@ -136,7 +140,7 @@ guessCheckBtn.addEventListener("click", () => {
     }
 
     if (
-      correctAnswer.includes(mappedGuessLetter) &&
+      currentAnswer.includes(mappedGuessLetter) &&
       frequencyCopy[mappedGuessLetter] > 0
     ) {
       boxes[index + 1].classList.add("misplaced-letter");
@@ -150,10 +154,10 @@ guessCheckBtn.addEventListener("click", () => {
 
   setTimeout(() => {
     if (
-      userGuessText.toLowerCase() === correctAnswer.toLowerCase() ||
+      userGuessText.toLowerCase() === currentAnswer.toLowerCase() ||
       currentAttempt > 5
     ) {
-      if (userGuessText.toLowerCase() === correctAnswer.toLowerCase())
+      if (userGuessText.toLowerCase() === currentAnswer.toLowerCase())
         finishGame(true);
       if (currentAttempt > 5) finishGame();
 
@@ -177,6 +181,8 @@ restartGameBtn.addEventListener("click", () => {
 
   const currentArrow = document.querySelector("div.arrow[data-active]");
   delete currentArrow.dataset.active;
+
+  getCurrentWord();
 });
 
 window.onload = () => {
