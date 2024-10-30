@@ -1,6 +1,7 @@
 const responseContainer = document.getElementById("response-container");
 const restartGameBtn = document.getElementById("restart-game-btn");
 const guessCheckBtn = document.getElementById("guess-check-btn");
+const averageScore = document.getElementById("average-score");
 
 const wordBank = [
   "Apple",
@@ -73,7 +74,7 @@ const getCurrentWord = (fetchWord = false) => {
   const options = {
     method: "GET",
     headers: {
-      "x-rapidapi-key": "",
+      "x-rapidapi-key": "5c547f3788msh007f4139bb62e23p1dce91jsnd655fb0d4e13",
       "x-rapidapi-host": "wordle-api3.p.rapidapi.com",
     },
   };
@@ -161,8 +162,12 @@ guessCheckBtn.addEventListener("click", () => {
         finishGame(true);
       if (currentAttempt > 5) finishGame();
 
+      updateScores(currentAttempt);
+
       responseContainer.style.display = "none";
       restartGameBtn.style.display = "block";
+
+      averageScore.innerHTML = `Average Guesses: ${getAverageGuesses()}`;
     }
   }, 0);
 });
@@ -187,4 +192,47 @@ restartGameBtn.addEventListener("click", () => {
 
 window.onload = () => {
   getCurrentWord(true);
+
+  averageScore.innerHTML =
+    getCookie("userScores") !== null
+      ? `Average Guesses: ${getAverageGuesses()}`
+      : `Thanks for visiting! Finish your first game to get your average guesses.`;
+};
+
+// Cookie storage for average guesses
+function setCookie(name, value, days) {
+  const date = new Date();
+  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+  const expires = "expires=" + date.toUTCString();
+  document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+
+const getCookie = (name) => {
+  const nameEQ = `${name}=`;
+  const cookiesArray = document.cookie.split(";");
+  for (let i = 0; i < cookiesArray.length; i++) {
+    let cookie = cookiesArray[i].trim();
+    if (cookie.indexOf(nameEQ) === 0) {
+      return cookie.substring(nameEQ.length, cookie.length);
+    }
+  }
+  return null;
+};
+
+const updateScores = (newGuessCount) => {
+  let scores = getCookie("userScores");
+  scores = scores ? JSON.parse(scores) : [];
+  scores.push(newGuessCount);
+  setCookie("userScores", JSON.stringify(scores), 30);
+};
+
+const getAverageGuesses = () => {
+  let scores = getCookie("userScores");
+  if (scores) {
+    scores = JSON.parse(scores);
+    const total = scores.reduce((sum, guess) => sum + guess, 0);
+    return (total / scores.length).toFixed(2);
+  }
+
+  return 0;
 };
