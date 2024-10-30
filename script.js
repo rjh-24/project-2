@@ -141,7 +141,7 @@ guessCheckBtn.addEventListener("click", () => {
     }
 
     if (
-      currentAnswer.includes(mappedGuessLetter) &&
+      currentAnswer.toLowerCase().includes(mappedGuessLetter) &&
       frequencyCopy[mappedGuessLetter] > 0
     ) {
       boxes[index + 1].classList.add("misplaced-letter");
