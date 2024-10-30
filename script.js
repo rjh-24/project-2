@@ -2,6 +2,7 @@ const responseContainer = document.getElementById("response-container");
 const restartGameBtn = document.getElementById("restart-game-btn");
 const guessCheckBtn = document.getElementById("guess-check-btn");
 const averageScore = document.getElementById("average-score");
+const API_KEY = config.API_KEY;
 
 const wordBank = [
   "Apple",
@@ -74,7 +75,7 @@ const getCurrentWord = (fetchWord = false) => {
   const options = {
     method: "GET",
     headers: {
-      "x-rapidapi-key": "5c547f3788msh007f4139bb62e23p1dce91jsnd655fb0d4e13",
+      "x-rapidapi-key": API_KEY,
       "x-rapidapi-host": "wordle-api3.p.rapidapi.com",
     },
   };
